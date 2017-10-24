@@ -27,7 +27,6 @@ nbdist/
 .nb-gradle/
 
 # 忽略文件夹
-src
 target
 mvnw
 mvnw.cmd

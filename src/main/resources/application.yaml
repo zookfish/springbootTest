@@ -1,0 +1,115 @@
+app: 
+  secret: ${random.value}
+  number: ${random.int}
+  name: zookfish
+  desc: ${app.name} is a singal project
+
+server: 
+  port: 8090
+
+spring: 
+  profiles: 
+    active: dev #激活test环境的配置
+  jackson: 
+    date-format: yyyy-MM-dd HH:mm:ss #date 格式化
+    time-zone: Asia/Chongqing
+  # 上传文件设置
+  http: 
+    multipart:
+      enabled: true #默认支持文件上传.
+      file-size-threshold: 0 #支持文件写入磁盘.
+      location: # 上传文件的临时目录
+      max-file-size: 1Mb # 最大支持文件大小
+      max-request-size: 10Mb # 最大支持请求大小
+  # mysql数据源    
+#  datasource: 
+#    url:  jdbc:mysql://localhost:3306/mybatis_spring?useUnicode=true&characterEncoding=utf-8
+#    username: root
+#    password: eqap
+#    driver-class-name: com.mysql.jdbc.Driver
+    
+  jpa: 
+    hibernate:  
+      ddl-auto: update
+    show-sql: true
+
+   
+# 指定日志文件名
+#logging: 
+#  config: classpath:logback-test.xml # config: classpath:log4j2-dev.xml
+# 三个---代表区分另外一个配置文件,针对yaml类型的配置文件
+--- 
+spring: 
+  profiles: dev
+  # h2内嵌数据源
+  datasource: 
+    url: jdbc:h2:file:D:/zookfish/spring_boot;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+    username: root
+    password: eqap
+    driver-class-name: org.h2.Driver
+  jpa: 
+    hibernate:  
+      ddl-auto: update
+    show-sql: true
+  cache: 
+    type: redis  # 使用redis作为缓存    
+  redis: 
+    host: 192.168.237.128
+    port: 6379
+    # redis数据库索引
+#    database: 0
+#    pool:
+#      # 最大连接数
+#      max-active: 8
+#      max-wait: -1
+#      max-idle: 8
+#      min-idle: 0
+#    timeout: 0
+  # activemq配置项
+  activemq: 
+    broker-url: tcp://192.168.237.128:61616 
+    pool: 
+      idle-timeout: 30000
+      max-connections: 1
+#spring.activemq.in-memory=true
+#spring.activemq.password= 
+#spring.activemq.user= 
+#spring.activemq.packages.trust-all=false
+#spring.activemq.packages.trusted=
+#spring.activemq.pool.configuration.*= 
+#spring.activemq.pool.enabled=false
+#spring.activemq.pool.expiry-timeout=0
+#management.security.enabled
+management: 
+  security: 
+    enabled: true #进入监控页面不需要权限设置
+    roles: SUPERUSER
+  context-path: /manage  #进入监控路径需要加上这个路径
+endpoints: 
+  sensitive: true
+  shutdown: 
+    enabled: true
+
+#保护端点
+security: 
+  basic: 
+    enabled: true
+    path: /manage  #对这个连接作权限管理
+  user: 
+    name: zookfish
+    password: eqap
+#management.security.roles=SUPERUSER
+
+#自定义路径
+#security.basic.path=/manage
+#management.context-path=/manage
+    
+
+logging: 
+  level: 
+    org:
+      hibernate: DEBUG
+
+server: 
+  port: 8082
+    
