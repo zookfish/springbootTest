@@ -2,21 +2,20 @@ package com.example.demo.config;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.example.demo.bean.CountryModel;
-import com.example.demo.util.RedisObjectSerializer;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisCluster;
 
 @Configuration
 public class RedisConfig<K, V> extends CachingConfigurerSupport {
@@ -56,7 +55,17 @@ public class RedisConfig<K, V> extends CachingConfigurerSupport {
 
 		};
 	}
-
+	
+	// 注册redis集群操作bean
+	@Bean
+	public JedisCluster jedisCluster() {
+		Set<HostAndPort> nodes = new HashSet<>();
+		nodes.add(new HostAndPort("192.168.237.128", 7001));
+		nodes.add(new HostAndPort("192.168.237.131", 7003));
+		nodes.add(new HostAndPort("192.168.237.132", 7005));
+		return new JedisCluster(nodes);
+	}
+	
 	/**
 	 * 自定义 key. 此方法将会根据类名+方法名+所有参数的值生成唯一的一个 key,即使@Cacheable 中 的 value 属性一样， key
 	 * 也会不一样。
