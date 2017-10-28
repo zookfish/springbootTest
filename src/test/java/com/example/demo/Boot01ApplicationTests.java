@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.Date;
 
+import org.apache.naming.java.javaURLContextFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.example.demo.component.JmsComponent;
 import com.example.demo.dao.CountryDao;
 import com.example.demo.dao.CountryModelDao;
 
+import redis.clients.jedis.JedisCluster;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class Boot01ApplicationTests {
@@ -40,6 +43,9 @@ public class Boot01ApplicationTests {
 	
 	@Autowired
 	private JmsComponent jmsComponent;
+	
+	@Autowired
+	private JedisCluster jedisCluster;
 
 	@Test
 	public void insert() {
@@ -116,6 +122,16 @@ public class Boot01ApplicationTests {
 	
 	@Test
 	public void contextLoads() {
+	}
+	
+	@Test
+	public void testCluster() {
+		
+		jedisCluster.set("z", "oo");
+		jedisCluster.set("yu", "xiang");
+		
+		System.out.println(jedisCluster.get("z"));
+		System.out.println(jedisCluster.get("yu"));
 	}
 
 }
